@@ -1,0 +1,19 @@
+{
+  "name": "aid",
+  "version": "0.0.1",
+  "description": "A blood donor management app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Blood",
+    "Donor"
+  ],
+  "author": "Dinesh Raja",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongodb": "^2.2.16"
+  }
+}
