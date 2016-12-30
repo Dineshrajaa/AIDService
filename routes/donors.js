@@ -3,6 +3,7 @@ var Server = mongo.Server;
 var Db = mongo.Db;
 var BSON = mongo.BSONPure;
 var server = new Server('localhost', 27017, { auto_reconnect: true });
+// var server=new Server('mongodb://dinesh:raja@ds145118.mlab.com:45118/aiddb');
 db = new Db('aiddb', server);
 db.open(function(err, db) {
     if (!err) {
@@ -19,7 +20,7 @@ exports.addDonor = function(req, res) {
     // To add a donor
     var donor = req.body;
     console.log('Adding Donor: ' + JSON.stringify(donor));
-    db.collection('donors', function(err, collection) {
+    /*db.collection('donors', function(err, collection) {
         collection.insert(donor, { safe: true }, function(err, result) {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
@@ -28,6 +29,14 @@ exports.addDonor = function(req, res) {
                 res.send(result[0]);
             }
         });
+    });*/
+    db.collection('donors').insertOne(donor, function(err, result) {
+        if (err) {
+            res.send({ 'error': 'An error has occurred' });
+        } else {
+            console.log('Success: ' + result);
+            res.send('Success');
+        }
     });
 };
 exports.listAllDonors = function(req, res) {
@@ -49,7 +58,7 @@ exports.findDonorById = function(req, res) {
             collection.find({ '_id': new BSON.ObjectID(id) }, function(err, donor) {
                 res.send(donor);
             });
-        }else console.log(err);
+        } else console.log(err);
     });
 };
 
