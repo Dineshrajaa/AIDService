@@ -2,9 +2,11 @@ var mongo = require('mongodb');
 var Server = mongo.Server;
 var Db = mongo.Db;
 var BSON = mongo.BSONPure;
+var MongoClient = mongo.MongoClient;
 var server = new Server('localhost', 27017, { auto_reconnect: true });
+var dbUrl = 'mongodb://dinesh:raja@ds145118.mlab.com:45118/aiddb';
 // var server=new Server('mongodb://dinesh:raja@ds145118.mlab.com:45118/aiddb');
-db = new Db('aiddb', server);
+/*db = new Db('aiddb', server);
 db.open(function(err, db) {
     if (!err) {
         console.log("Connected to 'aiddb' database");
@@ -15,40 +17,54 @@ db.open(function(err, db) {
             }
         });
     }
+});*/
+MongoClient.connect(dbUrl, function(err, db) {
+    if (err) {
+        throw err;
+    } else {
+        console.log("successfully connected to the database");
+    }
+    db.close();
 });
 exports.addDonor = function(req, res) {
     // To add a donor
     var donor = req.body;
     console.log('Adding Donor: ' + JSON.stringify(donor));
-    /*db.collection('donors', function(err, collection) {
-        collection.insert(donor, { safe: true }, function(err, result) {
-            if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                console.log('Success: ' + JSON.stringify(result[0]));
-                res.send(result[0]);
-            }
-        });
-    });*/
-    db.collection('donors').insertOne(donor, function(err, result) {
+
+    MongoClient.connect(dbUrl, function(err, db) {
         if (err) {
-            res.send({ 'error': 'An error has occurred' });
+            throw err;
         } else {
-            console.log('Success: ' + result);
-            res.send('Success');
+            db.collection('donors').insertOne(donor, function(err, result) {
+                if (err) {
+                    res.send({ 'error': 'An error has occurred' });
+                } else {
+                    console.log('Success: ' + result);
+                    res.send('Success');
+                }
+                db.close();
+            });
         }
     });
+
 };
 exports.listAllDonors = function(req, res) {
     // To list all registered donors
-    db.collection('donors', function(err, collection) {
-        collection.find().toArray(function(err, donors) {
-            res.send(donors);
-        });
+    MongoClient.connect(dbUrl, function(err, db) {
+        if (err) {
+            throw err;
+        } else {
+            db.collection('donors', function(err, collection) {
+                collection.find().toArray(function(err, donors) {
+                    res.send(donors);
+                });
+            });
+        }
     });
+
 };
 
-
+/*Not in use*/
 exports.findDonorById = function(req, res) {
     // To find the donor 
     var id = req.params.id;
