@@ -6,6 +6,7 @@ http.createServer(function(req,res){
 
 var express=require('express');
 var donors=require('./routes/donors');
+var appInfo=require('./routes/appinfo.js');
 var app=express();
 var bodyParser = require('body-parser');
 /*app.configure(function(){
@@ -24,6 +25,8 @@ app.get('/donors',donors.listAllDonors);
 app.get('/donors/:id',donors.findDonorById);
 app.post('/donors',donors.addDonor);
 app.put('/donors/:id',donors.updateDonor);
+app.get('/appinfo',appInfo.getAppInfo);
 // app.delete('/donors/:id',donors.deleteDonor);
 var port=Number(process.env.PORT || 3000);
+console.log("App running in port no:"+port);
 app.listen(port);
